@@ -1,0 +1,135 @@
+﻿@model IEnumerable<ClinicBook.Models.BenhNhan>
+
+@{
+    ViewData["Title"] = "Quản lý bệnh nhân";
+
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 0;
+    int totalItems = ViewBag.TotalItems ?? 0;
+    string search = ViewBag.Search as string ?? "";
+    bool laBenhNhan = User.IsInRole("BenhNhan");
+}
+
+<div class="container-fluid py-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2 class="mb-1">Quản lý bệnh nhân</h2>
+            <p class="text-muted mb-0">Danh sách và thông tin hồ sơ bệnh nhân</p>
+        </div>
+        @if (!laBenhNhan)
+        {
+            <a asp-action="Create" class="btn btn-primary">Thêm bệnh nhân</a>
+        }
+    </div>
+
+    @if (!laBenhNhan)
+    {
+        <form asp-action="Index" method="get" class="row g-2 mb-3">
+            <div class="col-md-6 col-lg-5">
+                <input type="text"
+                       name="search"
+                       value="@search"
+                       class="form-control"
+                       placeholder="Tìm theo họ tên, email, tài khoản hoặc số điện thoại..." />
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Làm mới</a>
+            </div>
+        </form>
+
+        <p class="text-muted">
+            Tìm thấy <strong>@totalItems</strong> hồ sơ bệnh nhân.
+        </p>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Mã hồ sơ</th>
+                    <th>Họ và tên</th>
+                    <th>Email</th>
+                    <th>Số điện thoại</th>
+                    <th>Ngày sinh</th>
+                    <th>Giới tính</th>
+                    <th>Địa chỉ</th>
+                    <th>Ngày tạo</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.MaBenhNhan</td>
+                            <td>@item.MaTaiKhoanNavigation?.HoTen</td>
+                            <td>@item.MaTaiKhoanNavigation?.Email</td>
+                            <td>@item.MaTaiKhoanNavigation?.SoDienThoai</td>
+                            <td>@(item.NgaySinh?.ToString("dd/MM/yyyy") ?? "Chưa cập nhật")</td>
+                            <td>@(item.GioiTinh ?? "Chưa cập nhật")</td>
+                            <td>@(item.DiaChi ?? "Chưa cập nhật")</td>
+                            <td>@item.NgayTao.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <a asp-action="Details"
+                                   asp-route-id="@item.MaBenhNhan"
+                                   class="btn btn-sm btn-info text-white">Chi tiết</a>
+
+                                @if (!laBenhNhan)
+                                {
+                                    <a asp-action="Edit"
+                                       asp-route-id="@item.MaBenhNhan"
+                                       class="btn btn-sm btn-warning">Sửa</a>
+                                    <a asp-action="Delete"
+                                       asp-route-id="@item.MaBenhNhan"
+                                       class="btn btn-sm btn-danger">Xóa</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="9" class="text-center text-muted py-4">
+                            Không tìm thấy hồ sơ bệnh nhân.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (!laBenhNhan && totalPages > 1)
+    {
+        <nav aria-label="Phân trang bệnh nhân">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-search="@search"
+                       asp-route-page="@(currentPage - 1)">Trước</a>
+                </li>
+
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-search="@search"
+                           asp-route-page="@i">@i</a>
+                    </li>
+                }
+
+                <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-search="@search"
+                       asp-route-page="@(currentPage + 1)">Sau</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>

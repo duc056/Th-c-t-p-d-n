@@ -1,0 +1,112 @@
+﻿@using ClinicBook.Models
+@{
+    ViewData["Title"] = "Tổng quan tiếp nhận";
+    var danhSach = ViewBag.LichHenSapToi as List<LichHen> ?? new List<LichHen>();
+}
+
+<div class="container-fluid py-4">
+    <div class="mb-4">
+        <h2 class="fw-bold">Tổng quan tiếp nhận</h2>
+        <p class="text-secondary">
+            Xin chào, @User.Identity?.Name! Theo dõi tình hình tiếp nhận bệnh nhân.
+        </p>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-secondary">Tổng bệnh nhân</div>
+                    <div class="fs-2 fw-bold text-primary">@ViewBag.TongBenhNhan</div>
+                    <a asp-controller="BenhNhan" asp-action="Index">Quản lý bệnh nhân</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-secondary">Tổng bác sĩ</div>
+                    <div class="fs-2 fw-bold text-success">@ViewBag.TongBacSi</div>
+                    <a asp-controller="BacSi" asp-action="Index">Danh sách bác sĩ</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-secondary">Tổng lịch hẹn</div>
+                    <div class="fs-2 fw-bold text-info">@ViewBag.TongLichHen</div>
+                    <a asp-controller="LichHen" asp-action="Index">Quản lý lịch hẹn</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-secondary">Lịch hẹn hôm nay</div>
+                    <div class="fs-2 fw-bold text-warning">@ViewBag.LichHenHomNay</div>
+                    <span class="text-muted small">Tính theo ngày hiện tại</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h5 class="fw-bold mb-0">Lịch hẹn sắp tới</h5>
+        </div>
+        <div class="card-body">
+            @if (danhSach.Count == 0)
+            {
+                <p class="text-muted mb-0">Hiện chưa có lịch hẹn sắp tới.</p>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead>
+                            <tr>
+                                <th>Thời gian</th>
+                                <th>Bệnh nhân</th>
+                                <th>Bác sĩ</th>
+                                <th>Trạng thái</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in danhSach)
+                            {
+                                <tr>
+                                    <td>@item.ThoiGianBatDau.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>
+                                        @(item.MaBenhNhanNavigation?.MaTaiKhoanNavigation?.HoTen ?? "Không có thông tin")
+                                    </td>
+                                    <td>
+                                        @(item.MaBacSiNavigation?.MaTaiKhoanNavigation?.HoTen ?? "Không có thông tin")
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-light text-dark">@item.TrangThai</span>
+                                    </td>
+                                    <td>
+                                        <a asp-controller="LichHen" asp-action="Details"
+                                           asp-route-id="@item.MaLichHen">Chi tiết</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="mt-4">
+        <form asp-controller="Auth" asp-action="Logout" method="post">
+            @Html.AntiForgeryToken()
+            <button class="btn btn-outline-danger" type="submit">Đăng xuất</button>
+        </form>
+    </div>
+</div>

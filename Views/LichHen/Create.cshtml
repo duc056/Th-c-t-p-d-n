@@ -1,0 +1,87 @@
+﻿@model ClinicBook.Models.LichHen
+
+@{
+    ViewData["Title"] = "Tạo lịch hẹn";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Tạo lịch hẹn khám bệnh</h4>
+        </div>
+
+        <div class="card-body">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="MaBenhNhan" class="form-label">Bệnh nhân</label>
+                    <select asp-for="MaBenhNhan" class="form-select"
+                            asp-items="ViewBag.MaBenhNhan">
+                        <option value="">-- Chọn bệnh nhân --</option>
+                    </select>
+                    <span asp-validation-for="MaBenhNhan" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="MaBacSi" class="form-label">Bác sĩ</label>
+                    <select asp-for="MaBacSi" class="form-select"
+                            asp-items="ViewBag.MaBacSi">
+                        <option value="">-- Chọn bác sĩ --</option>
+                    </select>
+                    <span asp-validation-for="MaBacSi" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="MaPhongKham" class="form-label">Phòng khám</label>
+                    <select asp-for="MaPhongKham" class="form-select"
+                            asp-items="ViewBag.MaPhongKham">
+                        <option value="">-- Chọn phòng khám --</option>
+                    </select>
+                    <span asp-validation-for="MaPhongKham" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ThoiGianBatDau" class="form-label">Thời gian bắt đầu</label>
+                        <input asp-for="ThoiGianBatDau" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="ThoiGianBatDau" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ThoiGianKetThuc" class="form-label">Thời gian kết thúc</label>
+                        <input asp-for="ThoiGianKetThuc" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="ThoiGianKetThuc" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="LyDoKham" class="form-label">Lý do khám</label>
+                    <textarea asp-for="LyDoKham" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="LyDoKham" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="GhiChu" class="form-label">Ghi chú</label>
+                    <textarea asp-for="GhiChu" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="GhiChu" class="text-danger"></span>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Trạng thái ban đầu:</strong> Chờ xác nhận<br />
+                    <strong>Ngày đặt:</strong> Hệ thống tự động ghi nhận thời điểm hiện tại.<br />
+                    <strong>Ngày cập nhật:</strong> Chỉ tự động ghi khi lịch hẹn được chỉnh sửa.
+                </div>
+
+                <button type="submit" class="btn btn-primary">Lưu lịch hẹn</button>
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,104 @@
+﻿@using ClinicBook.Models
+@{
+    ViewData["Title"] = "Dashboard bệnh nhân";
+    var danhSach = ViewBag.LichHenSapToi as List<LichHen> ?? new List<LichHen>();
+}
+
+<div class="container-fluid py-4">
+    <div class="mb-4">
+        <h2 class="fw-bold">Khu vực bệnh nhân</h2>
+        <p class="text-secondary">
+            Xin chào, @User.Identity?.Name! Quản lý thông tin và lịch khám của bạn.
+        </p>
+    </div>
+
+    @if (ViewBag.ChuaCoHoSo == true)
+    {
+        <div class="alert alert-warning">
+            Tài khoản chưa có hồ sơ bệnh nhân. Vui lòng liên hệ nhân viên tiếp nhận.
+        </div>
+    }
+    else
+    {
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="text-secondary">Tổng lịch hẹn của tôi</div>
+                        <div class="fs-2 fw-bold text-primary">@ViewBag.TongLichHen</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body">
+                        <div class="text-secondary">Lịch hẹn sắp tới</div>
+                        <div class="fs-2 fw-bold text-success">@danhSach.Count</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3">
+                <h5 class="fw-bold mb-0">Lịch khám sắp tới của tôi</h5>
+            </div>
+            <div class="card-body">
+                @if (danhSach.Count == 0)
+                {
+                    <p class="text-muted mb-0">Bạn chưa có lịch khám sắp tới.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead>
+                                <tr>
+                                    <th>Thời gian</th>
+                                    <th>Bác sĩ</th>
+                                    <th>Lý do khám</th>
+                                    <th>Trạng thái</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in danhSach)
+                                {
+                                    <tr>
+                                        <td>@item.ThoiGianBatDau.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>
+                                            @(item.MaBacSiNavigation?.MaTaiKhoanNavigation?.HoTen ?? "Chưa có thông tin")
+                                        </td>
+                                        <td>
+                                            @(string.IsNullOrWhiteSpace(item.LyDoKham) ? "Chưa cập nhật" : item.LyDoKham)
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-light text-dark">@item.TrangThai</span>
+                                        </td>
+                                        <td>
+                                            <a asp-controller="LichHen" asp-action="Details"
+                                               asp-route-id="@item.MaLichHen">Chi tiết</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <div class="mt-4 d-flex gap-2 flex-wrap">
+        <a asp-controller="LichHen" asp-action="Index" class="btn btn-primary">
+            Lịch hẹn của tôi
+        </a>
+        <a asp-controller="BenhNhan" asp-action="Index" class="btn btn-outline-primary">
+            Hồ sơ cá nhân
+        </a>
+        <form asp-controller="Auth" asp-action="Logout" method="post">
+            @Html.AntiForgeryToken()
+            <button class="btn btn-outline-danger" type="submit">Đăng xuất</button>
+        </form>
+    </div>
+</div>

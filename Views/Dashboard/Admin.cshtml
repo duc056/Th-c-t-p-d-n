@@ -1,0 +1,146 @@
+﻿
+@{
+    ViewData["Title"] = "Tổng quan hệ thống";
+}
+
+<div class="container-fluid py-3">
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1">Tổng quan hệ thống</h2>
+        <p class="text-secondary mb-0">
+            Chào mừng quản trị viên đến với hệ thống quản lý phòng khám ClinicBook.
+        </p>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-secondary">Tổng tài khoản</div>
+                    <div class="fs-2 fw-bold text-primary">@ViewBag.TongTaiKhoan</div>
+                    <a asp-controller="TaiKhoan" asp-action="Index"
+                       class="small text-decoration-none">Quản lý tài khoản →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-secondary">Bệnh nhân</div>
+                    <div class="fs-2 fw-bold text-success">@ViewBag.TongBenhNhan</div>
+                    <a asp-controller="BenhNhan" asp-action="Index"
+                       class="small text-decoration-none">Quản lý bệnh nhân →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-secondary">Bác sĩ</div>
+                    <div class="fs-2 fw-bold text-info">@ViewBag.TongBacSi</div>
+                    <a asp-controller="BacSi" asp-action="Index"
+                       class="small text-decoration-none">Quản lý bác sĩ →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-sm-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="text-secondary">Lịch hẹn</div>
+                    <div class="fs-2 fw-bold text-warning">@ViewBag.TongLichHen</div>
+                    <a asp-controller="LichHen" asp-action="Index"
+                       class="small text-decoration-none">Quản lý lịch hẹn →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3">
+            <h5 class="fw-bold mb-0">Thông tin cơ sở khám chữa bệnh</h5>
+        </div>
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <div class="p-3 bg-light rounded">
+                        <div class="text-secondary small">Chuyên khoa</div>
+                        <div class="fs-4 fw-bold">@ViewBag.TongChuyenKhoa</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3 bg-light rounded">
+                        <div class="text-secondary small">Phòng khám</div>
+                        <div class="fs-4 fw-bold">@ViewBag.TongPhongKham</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3 bg-light rounded">
+                        <div class="text-secondary small">Ca làm việc</div>
+                        <div class="fs-4 fw-bold">@ViewBag.TongCaLamViec</div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="p-3 bg-light rounded">
+                        <div class="text-secondary small">Ngày nghỉ</div>
+                        <div class="fs-4 fw-bold">@ViewBag.TongNgayNghi</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h5 class="fw-bold mb-0">Chức năng quản lý</h5>
+        </div>
+
+        <div class="card-body">
+            <div class="row g-3">
+                @{
+                    var chucNangs = new[]
+                    {
+                        new { Ten = "Tài khoản", MoTa = "Quản lý tài khoản đăng nhập", Controller = "TaiKhoan" },
+                        new { Ten = "Vai trò", MoTa = "Quản lý quyền người dùng", Controller = "VaiTro" },
+                        new { Ten = "Bệnh nhân", MoTa = "Thông tin bệnh nhân", Controller = "BenhNhan" },
+                        new { Ten = "Bác sĩ", MoTa = "Thông tin đội ngũ bác sĩ", Controller = "BacSi" },
+                        new { Ten = "Chuyên khoa", MoTa = "Quản lý chuyên khoa", Controller = "ChuyenKhoa" },
+                        new { Ten = "Phòng khám", MoTa = "Quản lý phòng khám", Controller = "PhongKham" },
+                        new { Ten = "Ca làm việc", MoTa = "Thiết lập lịch làm việc", Controller = "CaLamViec" },
+                        new { Ten = "Ngày nghỉ", MoTa = "Quản lý ngày nghỉ bác sĩ", Controller = "NgayNghi" },
+                        new { Ten = "Lịch hẹn", MoTa = "Theo dõi lịch khám", Controller = "LichHen" },
+                        new { Ten = "Kết quả khám", MoTa = "Quản lý kết quả khám", Controller = "KetQuaKham" },
+                        new { Ten = "Lịch sử lịch hẹn", MoTa = "Theo dõi thay đổi lịch hẹn", Controller = "LichSuLichHen" },
+                        new { Ten = "Bác sĩ - Chuyên khoa", MoTa = "Phân công chuyên khoa", Controller = "BacSiChuyenKhoa" }
+                    };
+                }
+
+                @foreach (var item in chucNangs)
+                {
+                    <div class="col-12 col-md-6 col-xl-4">
+                        <a asp-controller="@item.Controller" asp-action="Index"
+                           class="text-decoration-none">
+                            <div class="border rounded p-3 h-100 dashboard-link">
+                                <h6 class="fw-bold text-dark mb-2">@item.Ten</h6>
+                                <p class="text-secondary small mb-0">@item.MoTa</p>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashboard-link {
+        transition: all .2s ease;
+    }
+
+    .dashboard-link:hover {
+        border-color: #0d6efd !important;
+        background: #f5f9ff;
+        transform: translateY(-3px);
+    }
+</style>

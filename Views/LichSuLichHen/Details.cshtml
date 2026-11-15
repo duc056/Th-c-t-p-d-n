@@ -1,0 +1,56 @@
+﻿@model ClinicBook.Models.LichSuLichHen
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>LichSuLichHen</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TrangThaiCu)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TrangThaiCu)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TrangThaiMoi)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TrangThaiMoi)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ThoiGianThayDoi)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ThoiGianThayDoi)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.GhiChu)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.GhiChu)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MaLichHenNavigation)
+        </dt>
+        <dd class = "col-sm-10">
+            @(Model.MaLichHenNavigation == null ? "Không có" : Model.MaLichHenNavigation.MaLichHen.ToString())
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.MaTaiKhoanNavigation)
+        </dt>
+        <dd class = "col-sm-10">
+            @(Model.MaTaiKhoanNavigation == null ? "Không có" : Model.MaTaiKhoanNavigation.MaTaiKhoan.ToString())
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.MaLichSu">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>
+
+

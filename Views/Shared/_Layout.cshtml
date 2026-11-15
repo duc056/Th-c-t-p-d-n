@@ -1,0 +1,284 @@
+﻿@{
+    var laQuanTri = User.IsInRole("QuanTriVien");
+    var laNhanVien = User.IsInRole("NhanVienTiepNhan");
+    var laBacSi = User.IsInRole("BacSi");
+    var laBenhNhan = User.IsInRole("BenhNhan");
+    var daDangNhap = User.Identity?.IsAuthenticated == true;
+}
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ClinicBook</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        body {
+            background: #f4f7fb;
+            font-family: Arial, sans-serif;
+        }
+
+        .clinic-navbar {
+            height: 65px;
+            background: #ffffff;
+            border-bottom: 1px solid #e8edf3;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .clinic-brand {
+            font-size: 23px;
+            font-weight: 800;
+            color: #087f8c;
+            text-decoration: none;
+        }
+
+        .clinic-sidebar {
+            width: 255px;
+            min-height: calc(100vh - 65px);
+            background: #ffffff;
+            border-right: 1px solid #e8edf3;
+            padding: 20px 14px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-title {
+            color: #9aa5b1;
+            font-size: 11px;
+            font-weight: bold;
+            letter-spacing: 1px;
+            padding: 15px 12px 8px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 11px 13px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            color: #536273;
+            text-decoration: none;
+            font-size: 14px;
+            transition: .2s;
+        }
+
+        .sidebar-link:hover {
+            background: #eaf7f8;
+            color: #087f8c;
+        }
+
+        .sidebar-link.active {
+            background: #087f8c;
+            color: white;
+        }
+
+        .sidebar-link span {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .clinic-main {
+            flex: 1;
+            min-width: 0;
+            padding: 25px;
+        }
+
+        .user-name {
+            color: #344054;
+            font-weight: 600;
+        }
+
+        .clinic-footer {
+            color: #98a2b3;
+            font-size: 12px;
+            padding: 15px 25px;
+            text-align: center;
+        }
+
+        @@media (max-width: 768px) {
+            .clinic-sidebar {
+                width: 100%;
+                min-height: auto;
+                border-right: 0;
+                border-bottom: 1px solid #e8edf3;
+            }
+
+            .clinic-main {
+                padding: 15px;
+            }
+
+            .clinic-layout {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="clinic-navbar d-flex align-items-center justify-content-between px-4">
+        <a class="clinic-brand" asp-controller="Dashboard" asp-action="Index">
+            ✚ ClinicBook
+        </a>
+
+        <div class="d-flex align-items-center gap-3">
+            @if (daDangNhap)
+            {
+                <span class="user-name d-none d-sm-inline">
+                    Xin chào, @User.Identity?.Name
+                </span>
+
+                <form asp-controller="Auth" asp-action="Logout" method="post" class="m-0">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        Đăng xuất
+                    </button>
+                </form>
+            }
+            else
+            {
+                <a asp-controller="Auth" asp-action="Login"
+                   class="btn btn-primary btn-sm">
+                    Đăng nhập
+                </a>
+            }
+        </div>
+    </header>
+
+    <div class="d-flex clinic-layout">
+        @if (daDangNhap)
+        {
+            <aside class="clinic-sidebar">
+                <div class="sidebar-title">Tổng quan</div>
+
+                <a asp-controller="Dashboard" asp-action="Index" class="sidebar-link">
+                    <span>▦</span> Trang tổng quan
+                </a>
+
+                @if (laQuanTri)
+                {
+                    <div class="sidebar-title">Quản lý hệ thống</div>
+
+                    <a asp-controller="TaiKhoan" asp-action="Index" class="sidebar-link">
+                        <span>♙</span> Tài khoản
+                    </a>
+                    <a asp-controller="VaiTro" asp-action="Index" class="sidebar-link">
+                        <span>♧</span> Vai trò
+                    </a>
+                    <a asp-controller="BenhNhan" asp-action="Index" class="sidebar-link">
+                        <span>♡</span> Bệnh nhân
+                    </a>
+                    <a asp-controller="BacSi" asp-action="Index" class="sidebar-link">
+                        <span>⚕</span> Bác sĩ
+                    </a>
+                    <a asp-controller="ChuyenKhoa" asp-action="Index" class="sidebar-link">
+                        <span>✚</span> Chuyên khoa
+                    </a>
+                    <a asp-controller="PhongKham" asp-action="Index" class="sidebar-link">
+                        <span>⌂</span> Phòng khám
+                    </a>
+                    <a asp-controller="BacSiChuyenKhoa" asp-action="Index" class="sidebar-link">
+                        <span>♧</span> Phân công chuyên khoa
+                    </a>
+
+                    <div class="sidebar-title">Lịch làm việc</div>
+
+                    <a asp-controller="CaLamViec" asp-action="Index" class="sidebar-link">
+                        <span>◷</span> Ca làm việc
+                    </a>
+                    <a asp-controller="NgayNghi" asp-action="Index" class="sidebar-link">
+                        <span>▣</span> Ngày nghỉ
+                    </a>
+                    <a asp-controller="LichHen" asp-action="DatLich" class="sidebar-link">
+                        <span>ï¼‹</span> Äáº·t lá»‹ch khÃ¡m
+                    </a>
+                    <a asp-controller="LichHen" asp-action="Index" class="sidebar-link">
+                        <span>▦</span> Lịch hẹn
+                    </a>
+                    <a asp-controller="LichSuLichHen" asp-action="Index" class="sidebar-link">
+                        <span>↻</span> Lịch sử lịch hẹn
+                    </a>
+                    <a asp-controller="KetQuaKham" asp-action="Index" class="sidebar-link">
+                        <span>☷</span> Kết quả khám
+                    </a>
+                }
+
+                @if (laNhanVien)
+                {
+                    <div class="sidebar-title">Nghiệp vụ tiếp nhận</div>
+                    <a asp-controller="LichHen" asp-action="Index" class="sidebar-link">
+                        <span>▦</span> Quản lý lịch hẹn
+                    </a>
+                    <a asp-controller="BenhNhan" asp-action="Index" class="sidebar-link">
+                        <span>♡</span> Bệnh nhân
+                    </a>
+                    <a asp-controller="BacSi" asp-action="Index" class="sidebar-link">
+                        <span>⚕</span> Bác sĩ
+                    </a>
+                    <a asp-controller="PhongKham" asp-action="Index" class="sidebar-link">
+                        <span>⌂</span> Phòng khám
+                    </a>
+                }
+
+                @if (laBacSi)
+                {
+                    <div class="sidebar-title">Nghiệp vụ bác sĩ</div>
+                    <a asp-controller="LichHen" asp-action="Index" class="sidebar-link">
+                        <span>▦</span> Lịch khám
+                    </a>
+                    <a asp-controller="KetQuaKham" asp-action="Index" class="sidebar-link">
+                        <span>☷</span> Kết quả khám
+                    </a>
+                    <a asp-controller="CaLamViec" asp-action="Index" class="sidebar-link">
+                        <span>◷</span> Ca làm việc
+                    </a>
+                    <a asp-controller="NgayNghi" asp-action="Index" class="sidebar-link">
+                        <span>▣</span> Ngày nghỉ
+                    </a>
+                }
+
+                @if (laBenhNhan)
+                {
+                    <div class="sidebar-title">Dịch vụ bệnh nhân</div>
+                    <a asp-controller="LichHen" asp-action="DatLich" class="sidebar-link">
+                        <span>ï¼‹</span> Äáº·t lá»‹ch khÃ¡m
+                    </a>
+                    <a asp-controller="LichHen" asp-action="Index" class="sidebar-link">
+                        <span>▦</span> Lịch hẹn của tôi
+                    </a>
+                    <a asp-controller="LichSuLichHen" asp-action="Index" class="sidebar-link">
+                        <span>↻</span> Lịch sử khám
+                    </a>
+                    <a asp-controller="KetQuaKham" asp-action="Index" class="sidebar-link">
+                        <span>☷</span> Kết quả khám
+                    </a>
+                }
+
+                <div class="sidebar-title">Tài khoản</div>
+                <a asp-controller="Auth" asp-action="AccessDenied" class="sidebar-link">
+                    <span>ⓘ</span> Thông tin quyền truy cập
+                </a>
+            </aside>
+        }
+
+        <main class="clinic-main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="clinic-footer">
+        © 2026 ClinicBook - Hệ thống quản lý đặt lịch khám bệnh
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

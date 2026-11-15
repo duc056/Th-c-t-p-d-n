@@ -1,0 +1,116 @@
+﻿@model IEnumerable<ClinicBook.Models.CaLamViec>
+
+@{
+    ViewData["Title"] = "Quản lý ca làm việc";
+    int currentPage = ViewBag.CurrentPage ?? 1;
+    int totalPages = ViewBag.TotalPages ?? 0;
+    string search = ViewBag.Search as string ?? "";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <div>
+            <h2>Quản lý ca làm việc</h2>
+            <p class="text-muted mb-0">Danh sách lịch làm việc của bác sĩ</p>
+        </div>
+        @if (User.IsInRole("QuanTriVien"))
+        {
+            <a asp-action="Create" class="btn btn-primary">
+                Thêm ca làm việc
+            </a>
+        }
+    </div>
+
+    <form asp-action="Index" method="get" class="row g-2 mb-3">
+        <div class="col-md-5">
+            <input type="text" name="search" value="@search" class="form-control" placeholder="Tìm theo tên bác sĩ hoặc thứ trong tuần..." />
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">Làm mới</a>
+        </div>
+    </form>
+
+    <div class="mb-2 text-muted">
+        Tổng số: <strong>@ViewBag.TotalItems</strong> ca làm việc
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Bác sĩ</th>
+                    <th>Thứ trong tuần</th>
+                    <th>Giờ bắt đầu</th>
+                    <th>Giờ kết thúc</th>
+                    <th>Thời lượng khám</th>
+                    <th>Trạng thái</th>
+                    <th style="width: 190px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Any())
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @(item.MaBacSiNavigation?.MaTaiKhoanNavigation?.HoTen ?? "Bác sĩ " + item.MaBacSi)
+                            </td>
+                            <td>@item.ThuTrongTuan</td>
+                            <td>@item.GioBatDau</td>
+                            <td>@item.GioKetThuc</td>
+                            <td>@item.ThoiLuongKham phút</td>
+                            <td>
+                                @if (item.TrangThai)
+                                {
+                                    <span class="badge bg-success">Đang hoạt động</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">Ngừng hoạt động</span>
+                                }
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.MaCaLamViec" class="btn btn-sm btn-info text-white">Chi tiết</a>
+                                @if (User.IsInRole("QuanTriVien"))
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.MaCaLamViec" class="btn btn-sm btn-warning">Sửa</a>
+                                    <a asp-action="Delete" asp-route-id="@item.MaCaLamViec" class="btn btn-sm btn-danger">Xóa</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">
+                            Không tìm thấy ca làm việc nào.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (totalPages > 1)
+    {
+        <nav aria-label="Phân trang">
+            <ul class="pagination justify-content-center">
+                <li class="page-item @(currentPage <= 1 ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-search="@search" asp-route-page="@(currentPage - 1)">Trước</a>
+                </li>
+                @for (int i = 1; i <= totalPages; i++)
+                {
+                    <li class="page-item @(i == currentPage ? "active" : "")">
+                        <a class="page-link" asp-action="Index" asp-route-search="@search" asp-route-page="@i">@i</a>
+                    </li>
+                }
+                <li class="page-item @(currentPage >= totalPages ? "disabled" : "")">
+                    <a class="page-link" asp-action="Index" asp-route-search="@search" asp-route-page="@(currentPage + 1)">Sau</a>
+                </li>
+            </ul>
+        </nav>
+    }
+</div>

@@ -1,0 +1,89 @@
+﻿@model ClinicBook.Models.LichHen
+
+@{
+    ViewData["Title"] = "Chỉnh sửa lịch hẹn";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm">
+        <div class="card-header bg-warning">
+            <h4 class="mb-0">Chỉnh sửa lịch hẹn #@Model.MaLichHen</h4>
+        </div>
+
+        <div class="card-body">
+            <form asp-action="Edit" method="post">
+                <div asp-validation-summary="All" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="MaLichHen" />
+
+                <div class="mb-3">
+                    <label asp-for="MaBenhNhan" class="form-label">Bệnh nhân</label>
+                    <select asp-for="MaBenhNhan" class="form-select"
+                            asp-items="ViewBag.MaBenhNhan"></select>
+                    <span asp-validation-for="MaBenhNhan" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="MaBacSi" class="form-label">Bác sĩ</label>
+                    <select asp-for="MaBacSi" class="form-select"
+                            asp-items="ViewBag.MaBacSi"></select>
+                    <span asp-validation-for="MaBacSi" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="MaPhongKham" class="form-label">Phòng khám</label>
+                    <select asp-for="MaPhongKham" class="form-select"
+                            asp-items="ViewBag.MaPhongKham"></select>
+                    <span asp-validation-for="MaPhongKham" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ThoiGianBatDau" class="form-label">Thời gian bắt đầu</label>
+                        <input asp-for="ThoiGianBatDau" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="ThoiGianBatDau" class="text-danger"></span>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="ThoiGianKetThuc" class="form-label">Thời gian kết thúc</label>
+                        <input asp-for="ThoiGianKetThuc" type="datetime-local" class="form-control" />
+                        <span asp-validation-for="ThoiGianKetThuc" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="LyDoKham" class="form-label">Lý do khám</label>
+                    <textarea asp-for="LyDoKham" class="form-control" rows="2"></textarea>
+                    <span asp-validation-for="LyDoKham" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="TrangThai" class="form-label">Trạng thái</label>
+                    <input asp-for="TrangThai" class="form-control" />
+                    <span asp-validation-for="TrangThai" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="GhiChu" class="form-label">Ghi chú</label>
+                    <textarea asp-for="GhiChu" class="form-control" rows="2"></textarea>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Ngày đặt:</strong> @Model.NgayDat.ToString("dd/MM/yyyy HH:mm")<br />
+                    <strong>Ngày cập nhật:</strong>
+                    @(Model.NgayCapNhat?.ToString("dd/MM/yyyy HH:mm") ?? "Chưa cập nhật")
+                    <br />
+                    Ngày cập nhật sẽ được hệ thống tự động ghi khi bạn lưu thay đổi.
+                </div>
+
+                <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,73 @@
+﻿@using ClinicBook.Models
+@{
+    ViewData["Title"] = "Dashboard bÃ¡c sÄ©";
+    var danhSach = ViewBag.LichHenSapToi as List<LichHen> ?? new List<LichHen>();
+}
+
+<div class="container-fluid py-4">
+    <div class="mb-4">
+        <h2 class="fw-bold">Khu vá»±c bÃ¡c sÄ©</h2>
+        <p class="text-secondary">Xin chÃ o, @User.Identity?.Name! Theo dÃµi lá»‹ch khÃ¡m cá»§a báº¡n.</p>
+    </div>
+
+    @if (ViewBag.ChuaCoHoSo == true)
+    {
+        <div class="alert alert-warning">TÃ i khoáº£n chÆ°a Ä‘Æ°á»£c liÃªn káº¿t vá»›i há»“ sÆ¡ bÃ¡c sÄ©. Vui lÃ²ng liÃªn há»‡ quáº£n trá»‹ viÃªn.</div>
+    }
+    else
+    {
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm"><div class="card-body">
+                    <div class="text-secondary">Tá»•ng lá»‹ch háº¹n cá»§a tÃ´i</div>
+                    <div class="fs-2 fw-bold text-primary">@ViewBag.TongLichHen</div>
+                </div></div>
+            </div>
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm"><div class="card-body">
+                    <div class="text-secondary">Lá»‹ch háº¹n hÃ´m nay</div>
+                    <div class="fs-2 fw-bold text-success">@ViewBag.LichHenHomNay</div>
+                </div></div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white py-3"><h5 class="fw-bold mb-0">Lá»‹ch khÃ¡m sáº¯p tá»›i</h5></div>
+            <div class="card-body">
+                @if (danhSach.Count == 0)
+                {
+                    <p class="text-muted mb-0">Báº¡n chÆ°a cÃ³ lá»‹ch khÃ¡m sáº¯p tá»›i.</p>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead><tr><th>Thá»i gian</th><th>Bá»‡nh nhÃ¢n</th><th>LÃ½ do khÃ¡m</th><th>Tráº¡ng thÃ¡i</th><th></th></tr></thead>
+                            <tbody>
+                            @foreach (var item in danhSach)
+                            {
+                                <tr>
+                                    <td>@item.ThoiGianBatDau.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@item.MaBenhNhanNavigation.MaTaiKhoanNavigation.HoTen</td>
+                                    <td>@(string.IsNullOrWhiteSpace(item.LyDoKham) ? "ChÆ°a cáº­p nháº­t" : item.LyDoKham)</td>
+                                    <td><span class="badge bg-light text-dark">@item.TrangThai</span></td>
+                                    <td><a asp-controller="LichHen" asp-action="Details" asp-route-id="@item.MaLichHen">Chi tiáº¿t</a></td>
+                                </tr>
+                            }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+
+    <div class="mt-4 d-flex gap-2">
+        <a asp-controller="CaLamViec" asp-action="Index" class="btn btn-outline-primary">Lá»‹ch lÃ m viá»‡c</a>
+        <a asp-controller="NgayNghi" asp-action="Index" class="btn btn-outline-secondary">NgÃ y nghá»‰</a>
+        <form asp-controller="Auth" asp-action="Logout" method="post">
+            @Html.AntiForgeryToken()
+            <button class="btn btn-outline-danger" type="submit">ÄÄƒng xuáº¥t</button>
+        </form>
+    </div>
+</div>

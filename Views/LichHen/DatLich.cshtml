@@ -1,0 +1,141 @@
+﻿@{
+    ViewData["Title"] = "Đặt lịch khám";
+}
+
+<div class="container py-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Đặt lịch khám</h4>
+        </div>
+
+        <div class="card-body">
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+            }
+
+            <form asp-action="DatLich" method="post">
+                @Html.AntiForgeryToken()
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Chọn bác sĩ</label>
+                    <select id="maBacSi" name="maBacSi" class="form-select" required>
+                        <option value="">-- Chọn bác sĩ --</option>
+                        @foreach (var bacSi in (IEnumerable<SelectListItem>)ViewBag.BacSis)
+                        {
+                            <option value="@bacSi.Value">@bacSi.Text</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Ngày khám</label>
+                    <input type="date" id="ngayKham" class="form-control"
+                           min="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Khung giờ còn trống</label>
+                    <select id="khungGio" name="thoiGianBatDau"
+                            class="form-select" required disabled>
+                        <option value="">-- Chọn bác sĩ và ngày khám trước --</option>
+                    </select>
+                    <div id="thongBaoKhungGio" class="form-text">
+                        Khung giờ được cập nhật theo lịch làm việc của bác sĩ.
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Lý do khám</label>
+                    <textarea name="lyDoKham" class="form-control"
+                              rows="3" maxlength="500"
+                              placeholder="Nhập lý do khám bệnh"></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Ghi chú</label>
+                    <textarea name="ghiChu" class="form-control"
+                              rows="2" maxlength="500"
+                              placeholder="Thông tin bổ sung (nếu có)"></textarea>
+                </div>
+
+                <div class="alert alert-info">
+                    Lịch hẹn sau khi đặt sẽ có trạng thái
+                    <strong>Chờ xác nhận</strong>.
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Xác nhận đặt lịch
+                </button>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    Quay lại
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const bacSiSelect = document.getElementById("maBacSi");
+        const ngayInput = document.getElementById("ngayKham");
+        const khungSelect = document.getElementById("khungGio");
+        const thongBao = document.getElementById("thongBaoKhungGio");
+
+        async function taiKhungGio() {
+            khungSelect.innerHTML = '<option value="">Đang tải khung giờ...</option>';
+            khungSelect.disabled = true;
+
+            if (!bacSiSelect.value || !ngayInput.value) {
+                khungSelect.innerHTML =
+                    '<option value="">-- Chọn bác sĩ và ngày khám trước --</option>';
+                thongBao.textContent = "Vui lòng chọn bác sĩ và ngày khám.";
+                return;
+            }
+
+            try {
+                const url = '@Url.Action("GetKhungGioTrong", "LichHen")'
+                    + '?maBacSi=' + encodeURIComponent(bacSiSelect.value)
+                    + '&ngay=' + encodeURIComponent(ngayInput.value);
+
+                const response = await fetch(url);
+
+                if (!response.ok)
+                    throw new Error("Không tải được khung giờ.");
+
+                const data = await response.json();
+
+                khungSelect.innerHTML = "";
+
+                if (!data || data.length === 0) {
+                    khungSelect.innerHTML =
+                        '<option value="">Không còn khung giờ trống</option>';
+                    thongBao.textContent =
+                        "Ngày này không có ca làm việc hoặc các khung giờ đã được đặt/nghỉ.";
+                    return;
+                }
+
+                khungSelect.innerHTML =
+                    '<option value="">-- Chọn khung giờ --</option>';
+
+                data.forEach(item => {
+                    const option = document.createElement("option");
+                    option.value = item.start;
+                    option.textContent = item.label;
+                    khungSelect.appendChild(option);
+                });
+
+                khungSelect.disabled = false;
+                thongBao.textContent = "Tìm thấy " + data.length + " khung giờ còn trống.";
+            }
+            catch (error) {
+                khungSelect.innerHTML =
+                    '<option value="">Lỗi tải khung giờ</option>';
+                thongBao.textContent = error.message;
+            }
+        }
+
+        bacSiSelect.addEventListener("change", taiKhungGio);
+        ngayInput.addEventListener("change", taiKhungGio);
+    </script>
+}

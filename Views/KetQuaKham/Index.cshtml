@@ -1,0 +1,65 @@
+@model IEnumerable<ClinicBook.Models.KetQuaKham>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TrieuChung)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.KetQua)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LoiDan)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NgayKham)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaBacSiNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaLichHenNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TrieuChung)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.KetQua)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LoiDan)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NgayKham)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaBacSiNavigation.MaBacSi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaLichHenNavigation.MaLichHen)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.MaKetQua">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.MaKetQua">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.MaKetQua">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
