@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,6 +28,8 @@ public partial class BacSi
     public string? GioiThieu { get; set; }
 
     public bool TrangThai { get; set; }
+
+    public DateOnly? NgaySinh { get; set; }
 
     [InverseProperty("MaBacSiNavigation")]
     public virtual ICollection<BacSiChuyenKhoa> BacSiChuyenKhoas { get; set; } = new List<BacSiChuyenKhoa>();

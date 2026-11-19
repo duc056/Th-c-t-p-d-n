@@ -1,47 +1,126 @@
 @model IEnumerable<ClinicBook.Models.BacSiChuyenKhoa>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Phân công chuyên khoa";
+}
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show">
+        @TempData["Success"]
+        <button type="button" class="btn-close"
+                data-bs-dismiss="alert"></button>
+    </div>
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.LaChuyenKhoaChinh)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaBacSiNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaChuyenKhoaNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.LaChuyenKhoaChinh)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaBacSiNavigation.MaBacSi)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaChuyenKhoaNavigation.MaChuyenKhoa)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show">
+        @TempData["Error"]
+        <button type="button" class="btn-close"
+                data-bs-dismiss="alert"></button>
+    </div>
 }
-    </tbody>
-</table>
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">Phân công chuyên khoa</h2>
+            <p class="text-muted mb-0">Quản lý chuyên khoa được phân công cho từng bác sĩ</p>
+        </div>
+
+        @if (User.IsInRole("QuanTriVien"))
+        {
+            <a asp-action="Create" class="btn btn-primary">
+                + Thêm phân công
+            </a>
+        }
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>STT</th>
+                        <th>Bác sĩ</th>
+                        <th>Chuyên khoa</th>
+                        <th>Chuyên khoa chính</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        int stt = 1;
+
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@stt</td>
+                                <td>
+                                    <strong>
+                                        @(item.MaBacSiNavigation?.MaTaiKhoanNavigation?.HoTen
+                                            ?? $"Bác sĩ #{item.MaBacSi}")
+                                    </strong>
+                                    <div class="text-muted small">
+                                        Mã bác sĩ: @item.MaBacSi
+                                    </div>
+                                </td>
+                                <td>
+                                    @(item.MaChuyenKhoaNavigation?.TenChuyenKhoa
+                                        ?? $"Chuyên khoa #{item.MaChuyenKhoa}")
+                                </td>
+                                <td>
+                                    @if (item.LaChuyenKhoaChinh)
+                                    {
+                                        <span class="badge bg-success">Chuyên khoa chính</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary">Chuyên khoa phụ</span>
+                                    }
+                                </td>
+                                <td class="text-center">
+                                    <div class="btn-group btn-group-sm">
+                                        <a asp-action="Details"
+                                           asp-route-maBacSi="@item.MaBacSi"
+                                           asp-route-maChuyenKhoa="@item.MaChuyenKhoa"
+                                           class="btn btn-outline-info">
+                                            Chi tiết
+                                        </a>
+
+                                        @if (User.IsInRole("QuanTriVien"))
+                                        {
+                                            <a asp-action="Edit"
+                                               asp-route-maBacSi="@item.MaBacSi"
+                                               asp-route-maChuyenKhoa="@item.MaChuyenKhoa"
+                                               class="btn btn-outline-primary">
+                                                Sửa
+                                            </a>
+
+                                            <a asp-action="Delete"
+                                               asp-route-maBacSi="@item.MaBacSi"
+                                               asp-route-maChuyenKhoa="@item.MaChuyenKhoa"
+                                               class="btn btn-outline-danger">
+                                                Xóa
+                                            </a>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+
+                            stt++;
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                Chưa có dữ liệu phân công chuyên khoa.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

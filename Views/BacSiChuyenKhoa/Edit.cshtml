@@ -1,35 +1,63 @@
 @model ClinicBook.Models.BacSiChuyenKhoa
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Sửa phân công chuyên khoa";
 }
 
-<h1>Edit</h1>
+<div class="container mt-4">
+    <h2 class="fw-bold">Sửa phân công chuyên khoa</h2>
+    <p class="text-muted">Cập nhật thông tin phân công bác sĩ.</p>
+    <hr />
 
-<h4>BacSiChuyenKhoa</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="MaBacSi" />
-            <input type="hidden" asp-for="MaChuyenKhoa" />
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="LaChuyenKhoaChinh" /> @Html.DisplayNameFor(model => model.LaChuyenKhoaChinh)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="row">
+        <div class="col-md-7 col-lg-6">
+            <form asp-action="Edit"
+                  asp-route-maBacSi="@Model.MaBacSi"
+                  asp-route-maChuyenKhoa="@Model.MaChuyenKhoa"
+                  method="post">
+
+                <div asp-validation-summary="All"
+                     class="text-danger mb-3"></div>
+                <input type="hidden" asp-for="MaBacSi" />
+                <input type="hidden" asp-for="MaChuyenKhoa" />
+
+                <div class="mb-3">
+                    <label class="form-label">Mã bác sĩ</label>
+                    <input value="@Model.MaBacSi"
+                           class="form-control"
+                           readonly />
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Chuyên khoa</label>
+                    <input value="@Model.MaChuyenKhoaNavigation?.TenChuyenKhoa"
+                           class="form-control"
+                           readonly />
+                </div>
+
+                <div class="form-check mb-3">
+                    <input asp-for="LaChuyenKhoaChinh"
+                           class="form-check-input" />
+                    <label asp-for="LaChuyenKhoaChinh"
+                           class="form-check-label">
+                        Đây là chuyên khoa chính
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    Lưu thay đổi
+                </button>
+
+                <a asp-action="Index" class="btn btn-secondary">
+                    Quay lại
+                </a>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

@@ -1,38 +1,53 @@
-@model ClinicBook.Models.ChuyenKhoa
+@model ClinicBook.Models.BacSiChuyenKhoa
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Phân công chuyên khoa";
 }
 
-<h1>Create</h1>
+<div class="container mt-4">
+    <h2>Phân công chuyên khoa cho bác sĩ</h2>
+    <p class="text-muted">Chọn bác sĩ và chuyên khoa muốn phân công.</p>
+    <hr />
 
-<h4>ChuyenKhoa</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="TenChuyenKhoa" class="control-label"></label>
-                <input asp-for="TenChuyenKhoa" class="form-control" />
-                <span asp-validation-for="TenChuyenKhoa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MoTa" class="control-label"></label>
-                <input asp-for="MoTa" class="form-control" />
-                <span asp-validation-for="MoTa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="row">
+        <div class="col-md-7 col-lg-6">
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <div class="mb-3">
+                    <label asp-for="MaBacSi" class="form-label">Bác sĩ</label>
+                    <select asp-for="MaBacSi" class="form-select"
+                            asp-items="ViewBag.MaBacSi">
+                        <option value="">-- Chọn bác sĩ --</option>
+                    </select>
+                    <span asp-validation-for="MaBacSi" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="MaChuyenKhoa" class="form-label">Chuyên khoa</label>
+                    <select asp-for="MaChuyenKhoa" class="form-select"
+                            asp-items="ViewBag.MaChuyenKhoa">
+                        <option value="">-- Chọn chuyên khoa --</option>
+                    </select>
+                    <span asp-validation-for="MaChuyenKhoa" class="text-danger"></span>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input asp-for="LaChuyenKhoaChinh" class="form-check-input" />
+                    <label asp-for="LaChuyenKhoaChinh" class="form-check-label">
+                        Đây là chuyên khoa chính
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Lưu phân công</button>
+                <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

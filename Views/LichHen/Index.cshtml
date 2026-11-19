@@ -1,89 +1,153 @@
-@model IEnumerable<ClinicBook.Models.LichHen>
+﻿@model IEnumerable<ClinicBook.Models.LichHen>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Danh sÃ¡ch lá»‹ch háº¹n";
+    var laBenhNhan = User.IsInRole("BenhNhan");
+    var coQuyenQuanLy = User.IsInRole("QuanTriVien") || User.IsInRole("NhanVienTiepNhan");
 }
 
-<h1>Index</h1>
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Danh sÃ¡ch lá»‹ch háº¹n</h2>
+            <p class="text-muted mb-0">Theo dÃµi thÃ´ng tin vÃ  tráº¡ng thÃ¡i lá»‹ch khÃ¡m</p>
+        </div>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.ThoiGianBatDau)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ThoiGianKetThuc)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.LyDoKham)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TrangThai)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.GhiChu)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayDat)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NgayCapNhat)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaBacSiNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaBenhNhanNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.MaPhongKhamNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ThoiGianBatDau)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ThoiGianKetThuc)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LyDoKham)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TrangThai)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.GhiChu)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayDat)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NgayCapNhat)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaBacSiNavigation.MaBacSi)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaBenhNhanNavigation.MaBenhNhan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.MaPhongKhamNavigation.MaPhongKham)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.MaLichHen">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MaLichHen">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MaLichHen">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+        @if (laBenhNhan)
+        {
+            <a asp-action="DatLich" class="btn btn-primary">
+                + Äáº·t lá»‹ch khÃ¡m
+            </a>
+        }
+        else if (coQuyenQuanLy)
+        {
+            <a asp-action="Create" class="btn btn-primary">
+                + Táº¡o lá»‹ch háº¹n
+            </a>
+        }
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>MÃ£ lá»‹ch</th>
+                            <th>Thá»i gian báº¯t Ä‘áº§u</th>
+                            <th>Thá»i gian káº¿t thÃºc</th>
+                            <th>LÃ½ do khÃ¡m</th>
+                            <th>Tráº¡ng thÃ¡i</th>
+                            @if (!laBenhNhan)
+                            {
+                                <th>Bá»‡nh nhÃ¢n</th>
+                            }
+                            <th>BÃ¡c sÄ©</th>
+                            <th>PhÃ²ng khÃ¡m</th>
+                            <th>NgÃ y Ä‘áº·t</th>
+                            <th>Thao tÃ¡c</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model != null && Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.MaLichHen</td>
+                                    <td>@item.ThoiGianBatDau.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@item.ThoiGianKetThuc.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>@item.LyDoKham</td>
+                                    <td>
+                                        @if (item.TrangThai == "ChoXacNhan")
+                                        {
+                                            <span class="badge bg-warning text-dark">Chá» xÃ¡c nháº­n</span>
+                                        }
+                                        else if (item.TrangThai == "DaHuy")
+                                        {
+                                            <span class="badge bg-danger">ÄÃ£ há»§y</span>
+                                        }
+                                        else if (item.TrangThai == "DaXacNhan")
+                                        {
+                                            <span class="badge bg-success">ÄÃ£ xÃ¡c nháº­n</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">@item.TrangThai</span>
+                                        }
+                                    </td>
+
+                                    @if (!laBenhNhan)
+                                    {
+                                        <td>@item.MaBenhNhanNavigation?.MaTaiKhoanNavigation?.HoTen</td>
+                                    }
+
+                                    <td>@item.MaBacSiNavigation?.MaTaiKhoanNavigation?.HoTen</td>
+                                    <td>@item.MaPhongKhamNavigation?.TenPhongKham</td>
+                                    <td>@item.NgayDat.ToString("dd/MM/yyyy HH:mm")</td>
+                                    <td>
+                                        <div class="d-flex flex-wrap gap-1">
+                                            <a asp-action="Details"
+                                               asp-route-id="@item.MaLichHen"
+                                               class="btn btn-sm btn-outline-info">
+                                                Chi tiáº¿t
+                                            </a>
+
+                                            @if (coQuyenQuanLy)
+                                            {
+                                                <a asp-action="Edit"
+                                                   asp-route-id="@item.MaLichHen"
+                                                   class="btn btn-sm btn-outline-primary">
+                                                    Sá»­a
+                                                </a>
+                                            }
+
+                                            @if (laBenhNhan &&
+                                                 item.TrangThai == "ChoXacNhan" &&
+                                                 item.ThoiGianBatDau > DateTime.Now)
+                                            {
+                                                <form asp-action="HuyLichBenhNhan"
+                                                      method="post"
+                                                      onsubmit="return confirm('Báº¡n cÃ³ cháº¯c cháº¯n muá»‘n há»§y lá»‹ch háº¹n nÃ y khÃ´ng?');">
+                                                    @Html.AntiForgeryToken()
+                                                    <input type="hidden" name="id" value="@item.MaLichHen" />
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        Há»§y lá»‹ch
+                                                    </button>
+                                                </form>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="10" class="text-center text-muted py-4">
+                                    ChÆ°a cÃ³ lá»‹ch háº¹n nÃ o.
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

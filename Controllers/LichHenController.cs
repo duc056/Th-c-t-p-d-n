@@ -596,6 +596,70 @@ namespace ClinicBook.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+
+        // BENH NHAN TU HUY LICH HEN
+        [HttpPost]
+        [Authorize(Roles = "BenhNhan")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> HuyLichBenhNhan(int id)
+        {
+            var maTaiKhoan = GetMaTaiKhoan();
+
+            var benhNhan = await _context.BenhNhans
+                .FirstOrDefaultAsync(b => b.MaTaiKhoan == maTaiKhoan);
+
+            if (benhNhan == null)
+                return Forbid();
+
+            var lichHen = await _context.LichHens
+                .FirstOrDefaultAsync(l => l.MaLichHen == id);
+
+            if (lichHen == null)
+                return NotFound();
+
+            // Chi duoc huy lich cua chinh minh
+            if (lichHen.MaBenhNhan != benhNhan.MaBenhNhan)
+                return Forbid();
+
+            // Chi huy lich dang cho xac nhan
+            if (lichHen.TrangThai != "ChoXacNhan")
+            {
+                TempData["ErrorMessage"] =
+                    "Lá»‹ch háº¹n nÃ y khÃ´ng cÃ²n á»Ÿ tráº¡ng thÃ¡i chá» xÃ¡c nháº­n nÃªn khÃ´ng thá»ƒ há»§y.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Khong cho huy lich da qua gio kham
+            if (lichHen.ThoiGianBatDau <= DateTime.Now)
+            {
+                TempData["ErrorMessage"] =
+                    "KhÃ´ng thá»ƒ há»§y lá»‹ch háº¹n Ä‘Ã£ Ä‘áº¿n giá» hoáº·c Ä‘Ã£ qua giá» khÃ¡m.";
+                return RedirectToAction(nameof(Index));
+            }
+
+            var trangThaiCu = lichHen.TrangThai;
+            var thoiGianHuy = DateTime.Now;
+
+            lichHen.TrangThai = "DaHuy";
+            lichHen.NgayCapNhat = thoiGianHuy;
+
+            _context.LichSuLichHens.Add(new LichSuLichHen
+            {
+                MaLichHen = lichHen.MaLichHen,
+                TrangThaiCu = trangThaiCu,
+                TrangThaiMoi = "DaHuy",
+                MaTaiKhoan = maTaiKhoan,
+                ThoiGianThayDoi = thoiGianHuy,
+                GhiChu = "Bá»‡nh nhÃ¢n tá»± há»§y lá»‹ch háº¹n"
+            });
+
+            await _context.SaveChangesAsync();
+
+            TempData["SuccessMessage"] =
+                "ÄÃ£ há»§y lá»‹ch háº¹n thÃ nh cÃ´ng. Khung giá» nÃ y hiá»‡n cÃ³ thá»ƒ Ä‘Æ°á»£c Ä‘áº·t láº¡i.";
+
+            return RedirectToAction(nameof(Index));
+        }
         private void LoadDropdowns(LichHen? lichHen = null)
         {
             var benhNhans = _context.BenhNhans

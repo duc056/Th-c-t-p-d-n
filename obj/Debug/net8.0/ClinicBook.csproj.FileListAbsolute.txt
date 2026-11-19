@@ -243,6 +243,7 @@ C:\1.CNTT\TTDA\ClinicBook\obj\Debug\net8.0\ClinicBook.csproj.CoreCompileInputs.c
 C:\1.CNTT\TTDA\ClinicBook\obj\Debug\net8.0\ClinicBook.MvcApplicationPartsAssemblyInfo.cache
 C:\1.CNTT\TTDA\ClinicBook\obj\Debug\net8.0\ClinicBook.RazorAssemblyInfo.cache
 C:\1.CNTT\TTDA\ClinicBook\obj\Debug\net8.0\ClinicBook.RazorAssemblyInfo.cs
+C:\1.CNTT\TTDA\ClinicBook\obj\Debug\net8.0\ClinicBook.sourcelink.json
 C:\1.CNTT\TTDA\ClinicBook\obj\Debug\net8.0\rjimswa.dswa.cache.json
 C:\1.CNTT\TTDA\ClinicBook\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 C:\1.CNTT\TTDA\ClinicBook\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json

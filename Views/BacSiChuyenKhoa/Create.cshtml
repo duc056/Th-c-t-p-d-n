@@ -1,41 +1,66 @@
 @model ClinicBook.Models.BacSiChuyenKhoa
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Phân công chuyên khoa";
 }
 
-<h1>Create</h1>
+<div class="container mt-4">
+    <h2>Phân công chuyên khoa cho bác sĩ</h2>
+    <hr />
 
-<h4>BacSiChuyenKhoa</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="MaBacSi" class="control-label"></label>
-                <select asp-for="MaBacSi" class ="form-control" asp-items="ViewBag.MaBacSi"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="MaChuyenKhoa" class="control-label"></label>
-                <select asp-for="MaChuyenKhoa" class ="form-control" asp-items="ViewBag.MaChuyenKhoa"></select>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="LaChuyenKhoaChinh" /> @Html.DisplayNameFor(model => model.LaChuyenKhoaChinh)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
 
-<div>
-    <a asp-action="Index">Back to List</a>
+        <div asp-validation-summary="All"
+             class="alert alert-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="MaBacSi" class="form-label">
+                Bác sĩ
+            </label>
+            <select asp-for="MaBacSi"
+                    asp-items="ViewBag.MaBacSi"
+                    class="form-select">
+                <option value="">-- Chọn bác sĩ --</option>
+            </select>
+            <span asp-validation-for="MaBacSi"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="MaChuyenKhoa" class="form-label">
+                Chuyên khoa
+            </label>
+            <select asp-for="MaChuyenKhoa"
+                    asp-items="ViewBag.MaChuyenKhoa"
+                    class="form-select">
+                <option value="">-- Chọn chuyên khoa --</option>
+            </select>
+            <span asp-validation-for="MaChuyenKhoa"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="form-check mb-3">
+            <input asp-for="LaChuyenKhoaChinh"
+                   class="form-check-input" />
+            <label asp-for="LaChuyenKhoaChinh"
+                   class="form-check-label">
+                Là chuyên khoa chính
+            </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+            Lưu phân công
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Quay lại
+        </a>
+    </form>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
