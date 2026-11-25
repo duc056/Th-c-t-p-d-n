@@ -261,3 +261,8 @@ C:\1.CNTT\TTDA\ClinicBook\obj\Debug\net8.0\refint\ClinicBook.dll
 C:\1.CNTT\TTDA\ClinicBook\obj\Debug\net8.0\ClinicBook.pdb
 C:\1.CNTT\TTDA\ClinicBook\obj\Debug\net8.0\ClinicBook.genruntimeconfig.cache
 C:\1.CNTT\TTDA\ClinicBook\obj\Debug\net8.0\ref\ClinicBook.dll
+C:\1.CNTT\TTDA\ClinicBook\bin\Debug\net8.0\Microsoft.OpenApi.dll
+C:\1.CNTT\TTDA\ClinicBook\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+C:\1.CNTT\TTDA\ClinicBook\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+C:\1.CNTT\TTDA\ClinicBook\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\1.CNTT\TTDA\ClinicBook\obj\Debug\net8.0\ClinicBook.MvcApplicationPartsAssemblyInfo.cs
